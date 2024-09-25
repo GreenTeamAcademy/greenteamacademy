@@ -386,188 +386,19 @@
             </div>
         </section>
 
-        <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Calendar Appointment</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            grid-gap: 10px;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .calendar div {
-            padding: 20px;
-            background-color: #f2f2f2;
-            cursor: pointer;
-        }
-
-        .calendar .day {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .selected {
-            background-color: #FF5722 !important;
-            color: white;
-        }
-
-        .disabled {
-            background-color: #e0e0e0;
-            cursor: not-allowed;
-        }
-
-        .time-select {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .submit-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .submit-btn:hover {
-            background-color: #45a049;
-        }
-
-        select {
-            padding: 10px;
-            font-size: 16px;
-            width: 220px;
-            margin-bottom: 20px;
-        }
-
-    </style>
-</head>
+<!-- </head> -->
 <body>
     <h1>Schedule an Appointment</h1>
 
     <!-- Calendar Container -->
     <div id="calendar-container">
+        <!-- Calendly inline widget begin -->
+<div class="calendly-inline-widget" data-url="https://calendly.com/rachel-h-finch" style="min-width:320px;height:700px;"></div>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<!-- Calendly inline widget end -->        
+
         <!-- JavaScript will generate the calendar here -->
     </div>
-
-    <!-- Time Slot Selection -->
-    <div class="time-select" style="display:none;" id="time-select-container">
-        <label for="meeting-time">Select Appointment Time (EDT):</label>
-        <select id="meeting-time" required>
-            <option value="">-- Select a Time --</option>
-            <option value="08:00">8:00 AM</option>
-            <option value="08:30">8:30 AM</option>
-            <option value="09:00">9:00 AM</option>
-            <option value="09:30">9:30 AM</option>
-            <option value="10:00">10:00 AM</option>
-            <option value="10:30">10:30 AM</option>
-            <option value="11:00">11:00 AM</option>
-            <option value="11:30 AM">11:30 AM</option>
-            <option value="12:00">12:00 PM</option>
-            <option value="12:30">12:30 PM</option>
-            <option value="13:00">1:00 PM</option>
-            <option value="13:30">1:30 PM</option>
-            <option value="14:00">2:00 PM</option>
-            <option value="14:30">2:30 PM</option>
-            <option value="15:00">3:00 PM</option>
-            <option value="15:30">3:30 PM</option>
-            <option value="16:00">4:00 PM</option>
-            <option value="16:30">4:30 PM</option>
-            <option value="17:00">5:00 PM</option>
-        </select>
-
-        <button class="submit-btn" onclick="submitAppointment()">Schedule Appointment</button>
-    </div>
-
-    <script>
-        // Basic Calendar Setup
-        const today = new Date();
-        const selectedDate = { day: null, month: null, year: null };
-        const calendarContainer = document.getElementById('calendar-container');
-
-        // Create a basic calendar for the current month
-        function generateCalendar(year, month) {
-            const firstDayOfMonth = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            // Calendar header (weekdays)
-            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            let calendarHTML = '<div class="calendar">';
-            daysOfWeek.forEach(day => {
-                calendarHTML += `<div class="day">${day}</div>`;
-            });
-
-            // Blank days before the first of the month
-            for (let i = 0; i < firstDayOfMonth; i++) {
-                calendarHTML += '<div class="disabled"></div>';
-            }
-
-            // Fill in the days of the month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(year, month, day);
-                const isPast = date < today.setHours(0, 0, 0, 0);
-                calendarHTML += `<div class="${isPast ? 'disabled' : ''}" onclick="selectDay(${day}, ${month}, ${year})">${day}</div>`;
-            }
-
-            calendarHTML += '</div>';
-            calendarContainer.innerHTML = calendarHTML;
-        }
-
-        // Handle day selection
-        function selectDay(day, month, year) {
-            const selectedElement = document.querySelector('.selected');
-            if (selectedElement) {
-                selectedElement.classList.remove('selected');
-            }
-
-            // Update selected date
-            selectedDate.day = day;
-            selectedDate.month = month;
-            selectedDate.year = year;
-
-            // Highlight selected day
-            const calendarDays = document.querySelectorAll('#calendar-container .calendar div');
-            calendarDays.forEach(el => {
-                if (el.textContent == day && !el.classList.contains('disabled')) {
-                    el.classList.add('selected');
-                }
-            });
-
-            // Show time select options
-            document.getElementById('time-select-container').style.display = 'block';
-        }
-
-        // Submit Appointment
-        function submitAppointment() {
-            const time = document.getElementById('meeting-time').value;
-            if (selectedDate.day && time) {
-                const formattedDate = `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, '0')}-${selectedDate.day.toString().padStart(2, '0')}`;
-                alert(`Appointment scheduled on ${formattedDate} at ${time} EDT.`);
-            } else {
-                alert('Please select both a date and a time.');
-            }
-        }
-
-        // Generate the calendar for the current month
-        generateCalendar(today.getFullYear(), today.getMonth());
-    </script>
         
         <section class="blog-one blog-one--page">
             <div class="container">
